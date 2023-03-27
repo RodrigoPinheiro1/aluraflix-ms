@@ -7,6 +7,8 @@ import alura.com.usuarioflix.model.Usuario;
 import alura.com.usuarioflix.repository.UsuarioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,16 +20,7 @@ public class UsuarioService {
     @Autowired
     private VideoClient videoClient;
 
-    public void confirmarVideo(Long id) {
-
-        Usuario usuario = usuarioRepository.getReferenceById(id);
-
-        usuario.setPermissao(Permissao.ACEITO_ASSISTIR);
-        usuarioRepository.save(usuario);
-
-        videoClient.atualizaVideo(usuario.getVideoId());
-
-    }
+   
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -56,5 +49,27 @@ public class UsuarioService {
         return modelMapper.map(usuario,UsuarioDto.class);
     }
 
+    public void confirmarVideo(Long id) {
 
+        Usuario usuario = usuarioRepository.getReferenceById(id);
+
+        usuario.setPermissao(Permissao.ACEITO_ASSISTIR);
+        usuarioRepository.save(usuario);
+
+        videoClient.atualizaVideo(usuario.getVideoId());
+
+    }
+
+    public void alteraStatus(Long id) {
+        Usuario usuario = usuarioRepository.getReferenceById(id);
+
+        usuario.setPermissao(Permissao.ACEITO_ASSISTIR_SEM_INTEGRACAO);
+        usuarioRepository.save(usuario);
+
+    }
+
+    public Page<UsuarioDto> paginacao(Pageable pageable) {
+     return  usuarioRepository.findAll(pageable).map(usuario -> modelMapper.map(usuario,UsuarioDto.class));
+
+    }
 }

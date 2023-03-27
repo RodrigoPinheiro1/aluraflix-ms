@@ -2,10 +2,13 @@ package alura.com.usuarioflix.controller;
 
 import alura.com.usuarioflix.Dto.UsuarioDto;
 import alura.com.usuarioflix.service.UsuarioService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.HeaderParam;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -36,12 +39,25 @@ public class UsuarioController {
         return ResponseEntity.ok(atualizar);
     }
 
+    @GetMapping
+    public Page<UsuarioDto> paginacao(Pageable pageable){
+
+        return usuarioService.paginacao(pageable);
+    }
+
 
     @PatchMapping("/{id}/confirmado")
-    void confirmarVideo (@PathVariable Long id) {
+    @CircuitBreaker(name = "atualizaVideo",fallbackMethod = "videoAssistidoComAutorizacaoPendente")
+  public void confirmarVideo (@PathVariable Long id) {
 
         usuarioService.confirmarVideo(id);
     }
+    //fallBackMethod (plano B) precisa ter a mesma assinatura do metodo confirmarVideo, pode se adicionar uma exception apenas no segundo parametro
+    public void videoAssistidoComAutorizacaoPendente (Long id,Exception e){
+        usuarioService.alteraStatus(id);
+    }
+
+
 
 
 
