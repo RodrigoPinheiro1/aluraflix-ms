@@ -6,4 +6,6 @@ public enum Permissao {
     ACEITO,
     BLOQUEADO,
     ACEITO_ASSISTIR,
+
+    ACEITO_ASSISTIR_SEM_INTEGRACAO,
 }
