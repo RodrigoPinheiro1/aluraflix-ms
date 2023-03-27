@@ -1,0 +1,6 @@
+
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(â±äÂ
+\
+java:S3457."AFormat specifiers should be used instead of string concatenation.(üàù¼ıÿÿÿÿ
+m
+java:S1128"PRemove this unused import 'alura.com.videoscategorias.Controller.dto.StatusDto'.(âËØá8Î‚÷œò0
