@@ -14,8 +14,10 @@ public class UsuarioDto {
     @NotBlank
     @NotNull
     private String nome;
-
     private Permissao permissao;
+    @NotNull
+
     private LocalDate dataNascimento;
+    @NotNull
     private Long videoId;
 }

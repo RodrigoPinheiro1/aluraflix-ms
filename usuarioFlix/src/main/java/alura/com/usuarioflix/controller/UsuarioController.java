@@ -39,6 +39,13 @@ public class UsuarioController {
         return ResponseEntity.ok(atualizar);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDto> acharPorId(@PathVariable Long id){
+
+        UsuarioDto usuarioDto = usuarioService.acharPorId(id);
+
+        return ResponseEntity.ok(usuarioDto);
+    }
     @GetMapping
     public Page<UsuarioDto> paginacao(Pageable pageable){
 
