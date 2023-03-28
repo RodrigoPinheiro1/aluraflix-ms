@@ -1,6 +1,7 @@
 package alura.com.usuarioflix.service;
 
 import alura.com.usuarioflix.Dto.UsuarioDto;
+import alura.com.usuarioflix.exceptions.UsuarioNotFound;
 import alura.com.usuarioflix.http.VideoClient;
 import alura.com.usuarioflix.model.Permissao;
 import alura.com.usuarioflix.model.Usuario;
@@ -39,6 +40,7 @@ public class UsuarioService {
 
     public UsuarioDto atualizar(UsuarioDto dto, Long id) {
 
+        acharPorId(id);
         Usuario usuario = modelMapper.map(dto, Usuario.class);
 
         usuario.setId(id);
@@ -51,6 +53,7 @@ public class UsuarioService {
 
     public void confirmarVideo(Long id) {
 
+        acharPorId(id);
         Usuario usuario = usuarioRepository.getReferenceById(id);
 
         usuario.setPermissao(Permissao.ACEITO_ASSISTIR);
@@ -61,6 +64,8 @@ public class UsuarioService {
     }
 
     public void alteraStatus(Long id) {
+
+        acharPorId(id);
         Usuario usuario = usuarioRepository.getReferenceById(id);
 
         usuario.setPermissao(Permissao.ACEITO_ASSISTIR_SEM_INTEGRACAO);
@@ -72,4 +77,11 @@ public class UsuarioService {
      return  usuarioRepository.findAll(pageable).map(usuario -> modelMapper.map(usuario,UsuarioDto.class));
 
     }
+
+    public UsuarioDto acharPorId(Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(UsuarioNotFound::new);
+        return modelMapper.map(usuario,UsuarioDto.class);
+    }
+
+
 }
