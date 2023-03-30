@@ -28,5 +28,12 @@ public class Videos {
     private Boolean enable;
 
 
-
+    public Videos(String titulo, String descricao, String url, StatusVideo statusVideo, Categorias categorias, Boolean enable) {
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.url = url;
+        this.statusVideo = statusVideo;
+        this.categorias = categorias;
+        this.enable = enable;
+    }
 }
