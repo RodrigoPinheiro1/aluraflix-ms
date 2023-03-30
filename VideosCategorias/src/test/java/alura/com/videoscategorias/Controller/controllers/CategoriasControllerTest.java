@@ -10,6 +10,7 @@ import alura.com.videoscategorias.Controller.repository.VideosRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,14 +34,9 @@ class CategoriasControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     @Autowired
     private CategoriasRepository categoriasRepository;
-
-
-
     private Categorias categorias;
-
     @MockBean
     private CategoriasDto categoriasDto;
 
@@ -49,10 +45,12 @@ class CategoriasControllerTest {
 
     private String idString;
 
+    private final String idNotExist ="000";
+
 
     @BeforeAll
     void put() {
-        categorias = new Categorias("terror", "preto",true);
+        categorias = new Categorias("terror", "preto", true);
         categoriasRepository.save(categorias);
         idString = String.valueOf(categorias.getId());
     }
@@ -64,19 +62,16 @@ class CategoriasControllerTest {
 
     @BeforeEach
     void setUp() {
-        categoriasDto = new CategoriasDto("terror", "preto",true);
+        categoriasDto = new CategoriasDto("terror", "preto", true);
 
     }
 
     @Test
     void cadastro() throws Exception {
-
-
         mockMvc.perform(MockMvcRequestBuilders.post(uri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoriasDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
-
     }
 
     @Test
@@ -92,6 +87,19 @@ class CategoriasControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+
+    @Test
+    void shouldReturn404WhenUpdatingIdThatNotExist() throws Exception {
+
+        categoriasDto.setId(categorias.getId());
+        categoriasDto.setCor("atualizada cor");
+        categoriasDto.setTitulo("titulo atualizado");
+        mockMvc.perform(MockMvcRequestBuilders.put(uriId + idNotExist)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(categoriasDto)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
     @Test
     void paginacao() throws Exception {
 
@@ -104,6 +112,11 @@ class CategoriasControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(uriId + idString))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+    @Test
+    void shouldReturn404WhenSearchAIdthatNotExist() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(uriId+idNotExist))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 
     @Test
     void delete() throws Exception {
@@ -112,4 +125,10 @@ class CategoriasControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
     }
+    @Test
+    void shouldReturn404WhenDeleteAIdthatNotExist() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(uriId+idNotExist))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
 }
