@@ -23,6 +23,7 @@ public class CategoriasCategoriaServiceImpl implements CategoriaService {
     public CategoriasDto cadastro(CategoriasDto dto) {
 
         Categorias categorias = modelMapper.map(dto, Categorias.class);
+        categorias.setAtivo(true);
         categoriasRepository.save(categorias);
         return modelMapper.map(categorias, CategoriasDto.class);
     }
@@ -54,7 +55,12 @@ public class CategoriasCategoriaServiceImpl implements CategoriaService {
 
     @Override
     public void delete(Long uuid) {
-        findById(uuid);
-        categoriasRepository.deleteById(uuid);
+        CategoriasDto categoriasDto = findById(uuid);
+
+        Categorias categorias = modelMapper.map(categoriasDto, Categorias.class);
+        categorias.setAtivo(false);
+
+        categoriasRepository.save(categorias);
+
     }
 }

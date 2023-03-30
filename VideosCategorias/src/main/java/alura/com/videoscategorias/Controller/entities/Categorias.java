@@ -23,8 +23,13 @@ public class Categorias {
 
     private String cor;
 
-    public Categorias(String titulo, String cor) {
+    private Boolean ativo;
+
+    public Categorias(String titulo, String cor, Boolean ativo) {
         this.titulo = titulo;
         this.cor = cor;
+        this.ativo = ativo;
     }
+
+
 }

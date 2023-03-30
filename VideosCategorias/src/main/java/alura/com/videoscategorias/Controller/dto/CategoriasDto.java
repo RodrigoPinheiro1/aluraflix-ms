@@ -27,7 +27,12 @@ public class CategoriasDto {
     private String cor;
 
 
+    private Boolean ativo;
 
 
-
+    public CategoriasDto(String titulo, String cor, Boolean ativo) {
+        this.titulo = titulo;
+        this.cor = cor;
+        this.ativo = ativo;
+    }
 }
