@@ -57,10 +57,6 @@ class CategoriasControllerTest {
         idString = String.valueOf(categorias.getId());
     }
 
-    @AfterAll
-    void deleteAfter() {
-        categoriasRepository.delete(categorias);
-    }
 
     @BeforeEach
     void setUp() {
