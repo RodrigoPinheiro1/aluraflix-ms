@@ -4,6 +4,7 @@ import alura.com.videoscategorias.Controller.Service.implement.VideosServiceImpl
 import alura.com.videoscategorias.Controller.dto.StatusDto;
 import alura.com.videoscategorias.Controller.dto.VideoDto;
 import jakarta.validation.Valid;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -23,12 +24,18 @@ public class VideosController {
     @Autowired
     private VideosServiceImpl service;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @PostMapping
     public ResponseEntity<VideoDto> cadastrarVideo(@RequestBody @Valid VideoDto dto, UriComponentsBuilder builder) {
 
         VideoDto detalhesVideosDto = service.cadastrarVideo(dto);
 
         URI uri = builder.path("/videos/{id}").buildAndExpand(detalhesVideosDto.getId()).toUri();
+
+
+        rabbitTemplate.convertAndSend("videosCategorias.ex","",detalhesVideosDto);
         return ResponseEntity.created(uri).body(detalhesVideosDto);
 
     }

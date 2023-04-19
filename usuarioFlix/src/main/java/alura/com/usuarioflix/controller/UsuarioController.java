@@ -32,7 +32,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDto> atualiza (@RequestBody @Valid UsuarioDto dto, @PathVariable Long id){
+    public ResponseEntity<UsuarioDto> atualiza(@RequestBody @Valid UsuarioDto dto, @PathVariable Long id) {
 
         UsuarioDto atualizar = usuarioService.atualizar(dto, id);
 
@@ -40,35 +40,31 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDto> acharPorId(@PathVariable Long id){
+    public ResponseEntity<UsuarioDto> acharPorId(@PathVariable Long id) {
 
         UsuarioDto usuarioDto = usuarioService.acharPorId(id);
 
         return ResponseEntity.ok(usuarioDto);
     }
+
     @GetMapping
-    public Page<UsuarioDto> paginacao(Pageable pageable){
+    public Page<UsuarioDto> paginacao(Pageable pageable) {
 
         return usuarioService.paginacao(pageable);
     }
 
 
     @PatchMapping("/{id}/confirmado")
-    @CircuitBreaker(name = "atualizaVideo",fallbackMethod = "videoAssistidoComAutorizacaoPendente")
-  public void confirmarVideo (@PathVariable Long id) {
+    @CircuitBreaker(name = "atualizaVideo", fallbackMethod = "videoAssistidoComAutorizacaoPendente")
+    public void confirmarVideo(@PathVariable Long id) {
 
         usuarioService.confirmarVideo(id);
     }
+
     //fallBackMethod (plano B) precisa ter a mesma assinatura do metodo confirmarVideo, pode se adicionar uma exception apenas no segundo parametro
-    public void videoAssistidoComAutorizacaoPendente (Long id,Exception e){
+    public void videoAssistidoComAutorizacaoPendente(Long id, Exception e) {
         usuarioService.alteraStatus(id);
     }
-
-
-
-
-
-
 
 
 }
